@@ -1,0 +1,111 @@
+import { Instance } from "cs_script/point_script";
+
+let counter = 0;
+let ballScored = false;
+
+let scoreCT = 0;
+let scoreT = 0;
+
+const ctSounds = ["snd_goal_CT_1", "snd_goal_CT_2", "snd_goal_CT_3"];
+const tSounds = ["snd_goal_T_1", "snd_goal_T_2", "snd_goal_T_3"];
+
+const setBallColor = (color) => {
+  Instance.FindEntityByName("fb_ball").SetColor(color);
+};
+
+const resetBallPosition = (CTScored = undefined) => {
+  let yVolocity = 0;
+  if (CTScored !== undefined) yVolocity = CTScored ? -50 : 50;
+
+  Instance.FindEntityByName("fb_ball").Teleport({
+    position: { x: 0, y: 0, z: 50 },
+    velocity: { x: 0, y: yVolocity, z: 0 },
+    angles: { pitch: 1000, yaw: 1000, roll: 1000 },
+  });
+};
+
+const getRandomGoalSound = (isCT) => {
+  const index = Math.floor(Math.random() * 3);
+  const sounds = isCT ? ctSounds : tSounds;
+
+  Instance.EntFireAtName({ name: sounds[index], input: "StartSound" });
+};
+
+const drawScore = () => {
+  Instance.EntFireAtName({
+    name: "text_score_ct",
+    input: "SetMessage",
+    value: scoreCT,
+  });
+  Instance.EntFireAtName({
+    name: "text_score_t",
+    input: "SetMessage",
+    value: scoreT,
+  });
+};
+
+Instance.ServerCommand("mp_warmup_end");
+Instance.ServerCommand("buddha true");
+Instance.ServerCommand("mp_drop_knife_enable true");
+Instance.ServerCommand("mp_freezetime 0");
+Instance.ServerCommand("mp_roundtime 999999");
+Instance.ServerCommand("mp_startmoney 1337");
+Instance.ServerCommand("say 'script is working'");
+
+ballScored = true;
+
+Instance.OnScriptInput("fallTrigger", (test) => {
+  Instance.ServerCommand("say " + JSON.stringify(test));
+  setBallColor({
+    r: Math.random() * 225,
+    g: Math.random() * 225,
+    b: Math.random() * 225,
+  });
+  ballScored = true;
+});
+
+Instance.OnScriptInput("goal_ct", () => {
+  Instance.ServerCommand("say T scored!!");
+  scoreT++;
+  drawScore();
+  getRandomGoalSound(true);
+  setBallColor({ r: 222, g: 155, b: 53 });
+  // resetBallPosition(false);
+  ballScored = true;
+});
+
+Instance.OnScriptInput("goal_t", () => {
+  Instance.ServerCommand("say CT scored!!");
+  scoreCT++;
+  getRandomGoalSound(false);
+  setBallColor({ r: 93, g: 121, b: 174 });
+  // resetBallPosition(true);
+  ballScored = true;
+});
+
+Instance.OnScriptInput("Timer_tick", () => {
+  if (ballScored) {
+    counter++;
+    drawScore();
+    Instance.ServerCommand(`say Ball will spawn in ${5 - counter}sec`);
+    if (counter >= 5) {
+      resetBallPosition(true);
+      counter = 0;
+      ballScored = false;
+    }
+  }
+});
+
+Instance.OnPlayerReset(({ player }) => {
+  Instance.ServerCommand("say " + JSON.stringify(player));
+  player.DestroyWeapons();
+});
+
+Instance.OnKnifeAttack(({ attackType }) => {
+  Instance.ServerCommand("say " + JSON.stringify(attackType));
+  Instance.EntFireAtName({ name: "Sup", input: "ShowHudHint" });
+
+  if (attackType === 1) getRandomGoalSound(true);
+
+  if (attackType === 2) getRandomGoalSound(false);
+});

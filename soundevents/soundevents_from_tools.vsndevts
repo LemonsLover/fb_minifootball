@@ -1,0 +1,260 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	seal_diver_03.am3_cheer_06_goal = 
+	{
+		type = "csgo_mega"
+		volume = 1.0
+		_system_properties = 
+		{
+			event_origin = "maps/fb_minifootball.vmap"
+			display_hide_from_picker = "true"
+		}
+		pitch = 1.03
+		mixgroup = "VO"
+		block_matching_events = false
+		block_match_entity = false
+		block_duration = 0.0
+		block_distance = 0.0
+		use_fadetime_volume_mapping_curve = false
+		position_offset = [ 0.0, 0.0, 60.0 ]
+		use_distance_unfiltered_stereo_mapping_curve = true
+		distance_effect_mix = 0.0
+		occlusion_frequency_scale = 0.0
+		distance_volume_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+			[
+				300.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+		]
+		distance_unfiltered_stereo_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0,
+			],
+			[
+				25.0, 1.0, 0.0, -0.033333,
+				0.0, 1.0,
+			],
+			[
+				30.0, 0.0, -0.2, 0.0,
+				0.0, 0.0,
+			],
+		]
+		vsnd_files_track_01 = 
+		[
+			"sounds/vo/agents/seal_diver_03/am3_cheer_06.vsnd",
+		]
+	}
+	seal_diver_02.am1_cheer = 
+	{
+		type = "csgo_mega"
+		volume = 1.0
+		_system_properties = 
+		{
+			event_origin = "maps/fb_minifootball.vmap"
+			display_hide_from_picker = "true"
+		}
+		pitch = 1.0
+		mixgroup = "VO"
+		use_fadetime_volume_mapping_curve = false
+		block_matching_events = false
+		block_match_entity = false
+		block_duration = 0.0
+		block_distance = 0.0
+		position_offset = [ 0.0, 0.0, 60.0 ]
+		use_distance_unfiltered_stereo_mapping_curve = true
+		distance_effect_mix = 0.0
+		occlusion_frequency_scale = 0.0
+		distance_volume_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+			[
+				300.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+		]
+		distance_unfiltered_stereo_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0,
+			],
+			[
+				25.0, 1.0, 0.0, -0.033333,
+				0.0, 1.0,
+			],
+			[
+				30.0, 0.0, -0.2, 0.0,
+				0.0, 0.0,
+			],
+		]
+		vsnd_files_track_01 = 
+		[
+			"sounds/vo/agents/seal_diver_02/am1_cheer_05.vsnd",
+		]
+	}
+	balkan_epic.cheer_08_goal = 
+	{
+		type = "csgo_mega"
+		volume = 1.0
+		_system_properties = 
+		{
+			event_origin = "maps/fb_minifootball.vmap"
+			display_hide_from_picker = "true"
+		}
+		pitch = 1.0
+		mixgroup = "VO"
+		instance_limit = 0.0
+		use_fadetime_volume_mapping_curve = false
+		block_matching_events = false
+		block_match_entity = false
+		block_duration = 0.0
+		block_distance = 0.0
+		position_offset = [ 0.0, 0.0, 60.0 ]
+		use_distance_unfiltered_stereo_mapping_curve = true
+		distance_effect_mix = 0.0
+		occlusion_frequency_scale = 0.0
+		distance_volume_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+			[
+				300.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+		]
+		distance_unfiltered_stereo_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0,
+			],
+			[
+				25.0, 1.0, 0.0, -0.033333,
+				0.0, 1.0,
+			],
+			[
+				30.0, 0.0, -0.2, 0.0,
+				0.0, 0.0,
+			],
+		]
+		vsnd_files_track_01 = 
+		[
+			"sounds/vo/agents/balkan_epic/cheer_08.vsnd",
+		]
+	}
+	seal_diver_03.am3_cheer_01_goal = 
+	{
+		type = "csgo_mega"
+		volume = 1.0
+		_system_properties = 
+		{
+			event_origin = "maps/fb_minifootball.vmap"
+			display_hide_from_picker = "true"
+		}
+		pitch = 1.03
+		mixgroup = "VO"
+		block_matching_events = false
+		block_match_entity = false
+		block_duration = 0.0
+		block_distance = 0.0
+		use_fadetime_volume_mapping_curve = false
+		position_offset = [ 0.0, 0.0, 60.0 ]
+		use_distance_unfiltered_stereo_mapping_curve = true
+		distance_effect_mix = 0.0
+		occlusion_frequency_scale = 0.0
+		distance_volume_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+			[
+				300.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+		]
+		distance_unfiltered_stereo_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0,
+			],
+			[
+				25.0, 1.0, 0.0, -0.033333,
+				0.0, 1.0,
+			],
+			[
+				30.0, 0.0, -0.2, 0.0,
+				0.0, 0.0,
+			],
+		]
+		vsnd_files_track_01 = 
+		[
+			"sounds/vo/agents/seal_diver_03/am3_cheer_01.vsnd",
+		]
+	}
+	balkan_epic.chee = 
+	{
+		type = "csgo_mega"
+		volume = 1.0
+		_system_properties = 
+		{
+			event_origin = "maps/fb_minifootball.vmap"
+			display_hide_from_picker = "true"
+		}
+		pitch = 1.0
+		mixgroup = "VO"
+		instance_limit = 0.0
+		use_fadetime_volume_mapping_curve = false
+		block_matching_events = false
+		block_match_entity = false
+		block_duration = 0.0
+		block_distance = 0.0
+		position_offset = [ 0.0, 0.0, 60.0 ]
+		use_distance_unfiltered_stereo_mapping_curve = true
+		distance_effect_mix = 0.0
+		occlusion_frequency_scale = 0.0
+		distance_volume_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+			[
+				300.0, 1.0, 0.0, 0.0,
+				2.0, 3.0,
+			],
+		]
+		distance_unfiltered_stereo_mapping_curve = 
+		[
+			[
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0,
+			],
+			[
+				25.0, 1.0, 0.0, -0.033333,
+				0.0, 1.0,
+			],
+			[
+				30.0, 0.0, -0.2, 0.0,
+				0.0, 0.0,
+			],
+		]
+		vsnd_files_track_01 = 
+		[
+			"sounds/vo/agents/balkan_epic/cheer_04.vsnd",
+		]
+	}
+}
