@@ -1,29 +1,31 @@
 import { Instance } from "cs_script/point_script";
 
+//Global variables
 let counter = 0;
 let ballScored = false;
 
 let scoreCT = 0;
 let scoreT = 0;
 
-const ctSounds = ["snd_goal_CT_1", "snd_goal_CT_2", "snd_goal_CT_3"];
-const tSounds = ["snd_goal_T_1", "snd_goal_T_2", "snd_goal_T_3"];
-
+//Functions
 const setBallColor = (color) => {
   Instance.FindEntityByName("fb_ball").SetColor(color);
 };
 
+const ballSpawnVelocity = 50;
 const resetBallPosition = (CTScored = undefined) => {
-  let yVolocity = 0;
-  if (CTScored !== undefined) yVolocity = CTScored ? -50 : 50;
+  let yVelocity = 0;
+  if (CTScored !== undefined)
+    yVelocity = CTScored ? -ballSpawnVelocity : ballSpawnVelocity;
 
   Instance.FindEntityByName("fb_ball").Teleport({
     position: { x: 0, y: 0, z: 50 },
-    velocity: { x: 0, y: yVolocity, z: 0 },
-    angles: { pitch: 1000, yaw: 1000, roll: 1000 },
+    velocity: { x: 0, y: yVelocity, z: 0 },
   });
 };
 
+const ctSounds = ["snd_goal_CT_1", "snd_goal_CT_2", "snd_goal_CT_3"];
+const tSounds = ["snd_goal_T_1", "snd_goal_T_2", "snd_goal_T_3"];
 const getRandomGoalSound = (isCT) => {
   const index = Math.floor(Math.random() * 3);
   const sounds = isCT ? ctSounds : tSounds;
@@ -44,24 +46,24 @@ const drawScore = () => {
   });
 };
 
+//Test scripts
+resetBallPosition();
+
+//Innitial console commands
 Instance.ServerCommand("mp_warmup_end");
 Instance.ServerCommand("buddha true");
 Instance.ServerCommand("mp_drop_knife_enable true");
 Instance.ServerCommand("mp_freezetime 0");
 Instance.ServerCommand("mp_roundtime 999999");
 Instance.ServerCommand("mp_startmoney 1337");
+Instance.ServerCommand(`mp_ct_default_melee ""`);
+Instance.ServerCommand(`mp_t_default_melee ""`);
 Instance.ServerCommand("say 'script is working'");
 
-ballScored = true;
-
+//Hooks and event handlers
 Instance.OnScriptInput("fallTrigger", (test) => {
-  Instance.ServerCommand("say " + JSON.stringify(test));
-  setBallColor({
-    r: Math.random() * 225,
-    g: Math.random() * 225,
-    b: Math.random() * 225,
-  });
-  ballScored = true;
+  Instance.ServerCommand("say ball fell out the map");
+  resetBallPosition();
 });
 
 Instance.OnScriptInput("goal_ct", () => {
@@ -70,7 +72,6 @@ Instance.OnScriptInput("goal_ct", () => {
   drawScore();
   getRandomGoalSound(true);
   setBallColor({ r: 222, g: 155, b: 53 });
-  // resetBallPosition(false);
   ballScored = true;
 });
 
@@ -79,7 +80,6 @@ Instance.OnScriptInput("goal_t", () => {
   scoreCT++;
   getRandomGoalSound(false);
   setBallColor({ r: 93, g: 121, b: 174 });
-  // resetBallPosition(true);
   ballScored = true;
 });
 
