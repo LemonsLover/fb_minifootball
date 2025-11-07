@@ -1,26 +1,44 @@
 import { Instance } from "cs_script/point_script";
 
 //Global variables
+const ctPlayers = new Map();
+const tPlayers = new Map();
+const roundsToWin = 6;
+
 let counter = 0;
 let ballScored = false;
+let CTScored = undefined;
 
 let scoreCT = 0;
 let scoreT = 0;
+let CTWin = false;
+let TWin = false;
 
 //Functions
 const setBallColor = (color) => {
-  Instance.FindEntityByName("fb_ball").SetColor(color);
+  const ball = Instance.FindEntityByName("fb_ball");
+
+  ball.SetColor(color);
+  ball.Glow(color);
 };
 
-const ballSpawnVelocity = 50;
-const resetBallPosition = (CTScored = undefined) => {
+const resetBallPosition = () => {
+  const ball = Instance.FindEntityByName("fb_ball");
+  ball.Teleport({
+    position: { x: 0, y: 0, z: 190 },
+    angles: { pitch: 0, yaw: 0, roll: 0 },
+    velocity: { x: 0, y: 0, z: 0 },
+  });
+};
+
+const ballPushVelocity = 100;
+const pushBall = () => {
   let yVelocity = 0;
   if (CTScored !== undefined)
-    yVelocity = CTScored ? -ballSpawnVelocity : ballSpawnVelocity;
+    yVelocity = CTScored ? ballPushVelocity : -ballPushVelocity;
 
   Instance.FindEntityByName("fb_ball").Teleport({
-    position: { x: 0, y: 0, z: 50 },
-    velocity: { x: 0, y: yVelocity, z: 0 },
+    velocity: { x: 0, y: yVelocity, z: 25 },
   });
 };
 
@@ -29,6 +47,9 @@ const tSounds = ["snd_goal_T_1", "snd_goal_T_2", "snd_goal_T_3"];
 const getRandomGoalSound = (isCT) => {
   const index = Math.floor(Math.random() * 3);
   const sounds = isCT ? ctSounds : tSounds;
+  const scoreSound = isCT ? "snd_ball_scored_ct" : "snd_ball_scored_t";
+
+  Instance.EntFireAtName({ name: scoreSound, input: "StartSound" });
 
   Instance.EntFireAtName({ name: sounds[index], input: "StartSound" });
 };
@@ -46,19 +67,56 @@ const drawScore = () => {
   });
 };
 
+const prepareWinPlayers = (winTeamPlayers, loseTeamPlayers) => {
+  winTeamPlayers.forEach((player) => {
+    player.GiveNamedItem("weapon_p90", true);
+  });
+
+  loseTeamPlayers.forEach((player) => {
+    player.SetArmor(67);
+    player.SetMaxHealth(67);
+    player.SetHealth(67);
+  });
+};
+
+const checkWin = () => {
+  if (scoreCT >= roundsToWin) {
+    CTWin = true;
+    prepareWinPlayers(ctPlayers, tPlayers);
+    Instance.EntFireAtName({ name: "snd_goal_CT_WIN", input: "StartSound" });
+    Instance.EntFireAtName({
+      name: "text_ball_counter",
+      input: "SetMessage",
+      value: "CT WON!",
+    });
+  }
+  if (scoreT >= roundsToWin) {
+    TWin = true;
+    prepareWinPlayers(tPlayers, ctPlayers);
+    Instance.EntFireAtName({ name: "snd_goal_T_WIN", input: "StartSound" });
+    Instance.EntFireAtName({
+      name: "text_ball_counter",
+      input: "SetMessage",
+      value: "T WON!",
+    });
+  }
+};
+
 //Test scripts
-resetBallPosition();
+//resetBallPosition();
+//Instance.ServerCommand("say 'script is working'");
 
 //Innitial console commands
 Instance.ServerCommand("mp_warmup_end");
-Instance.ServerCommand("buddha true");
+// Instance.ServerCommand("buddha true");
 Instance.ServerCommand("mp_drop_knife_enable true");
-Instance.ServerCommand("mp_freezetime 0");
+Instance.ServerCommand("mp_freezetime 5");
 Instance.ServerCommand("mp_roundtime 999999");
 Instance.ServerCommand("mp_startmoney 1337");
-Instance.ServerCommand(`mp_ct_default_melee ""`);
-Instance.ServerCommand(`mp_t_default_melee ""`);
-Instance.ServerCommand("say 'script is working'");
+// Instance.ServerCommand(`mp_ct_default_melee ""`);
+Instance.ServerCommand(`mp_ct_default_secondary ""`);
+// Instance.ServerCommand(`mp_t_default_melee ""`);
+Instance.ServerCommand(`mp_t_default_secondary ""`);
 
 //Hooks and event handlers
 Instance.OnScriptInput("fallTrigger", (test) => {
@@ -68,44 +126,90 @@ Instance.OnScriptInput("fallTrigger", (test) => {
 
 Instance.OnScriptInput("goal_ct", () => {
   Instance.ServerCommand("say T scored!!");
+  getRandomGoalSound(true);
   scoreT++;
   drawScore();
-  getRandomGoalSound(true);
   setBallColor({ r: 222, g: 155, b: 53 });
+  resetBallPosition();
   ballScored = true;
+  CTScored = false;
+  checkWin();
 });
 
 Instance.OnScriptInput("goal_t", () => {
   Instance.ServerCommand("say CT scored!!");
-  scoreCT++;
   getRandomGoalSound(false);
+  scoreCT++;
+  drawScore();
   setBallColor({ r: 93, g: 121, b: 174 });
+  resetBallPosition();
   ballScored = true;
+  CTScored = true;
+  checkWin();
 });
 
 Instance.OnScriptInput("Timer_tick", () => {
-  if (ballScored) {
+  if (CTWin || TWin)
+    setBallColor({
+      r: Math.random() * 255,
+      g: Math.random() * 255,
+      b: Math.random() * 255,
+    });
+
+  if (ballScored && !(CTWin || TWin)) {
     counter++;
     drawScore();
-    Instance.ServerCommand(`say Ball will spawn in ${5 - counter}sec`);
+    Instance.EntFireAtName({
+      name: "text_ball_counter",
+      input: "SetMessage",
+      value: 5 - counter,
+    });
+    Instance.EntFireAtName({ name: "snd_ball_counter", input: "StartSound" });
     if (counter >= 5) {
-      resetBallPosition(true);
+      Instance.EntFireAtName({
+        name: "text_ball_counter",
+        input: "SetMessage",
+        value: "",
+      });
+      Instance.EntFireAtName({ name: "snd_ball_pushed", input: "StartSound" });
+      pushBall(true);
       counter = 0;
       ballScored = false;
+      CTScored = undefined;
     }
   }
 });
 
 Instance.OnPlayerReset(({ player }) => {
-  Instance.ServerCommand("say " + JSON.stringify(player));
+  const playerController = player.GetPlayerController();
+  const playerName = playerController.GetPlayerName();
+  const playerTeam = player.GetTeamNumber();
+
+  if (playerTeam === 1) {
+    ctPlayers.delete(playerName);
+    tPlayers.delete(playerName);
+  }
+  if (playerTeam === 2) {
+    tPlayers.set(playerName, player);
+    ctPlayers.delete(playerName);
+  }
+  if (playerTeam === 3) {
+    ctPlayers.set(playerName, player);
+    tPlayers.delete(playerName);
+  }
+
   player.DestroyWeapons();
+  player.SetArmor(999999);
+  player.SetMaxHealth(999999);
+  player.SetHealth(999999);
 });
 
-Instance.OnKnifeAttack(({ attackType }) => {
-  Instance.ServerCommand("say " + JSON.stringify(attackType));
-  Instance.EntFireAtName({ name: "Sup", input: "ShowHudHint" });
-
-  if (attackType === 1) getRandomGoalSound(true);
-
-  if (attackType === 2) getRandomGoalSound(false);
+Instance.OnRoundStart(() => {
+  counter = 0;
+  ballScored = false;
+  CTScored = undefined;
+  scoreCT = 0;
+  scoreT = 0;
+  CTWin = false;
+  TWin = false;
 });
